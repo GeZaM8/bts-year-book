@@ -1,0 +1,26 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Siswa {
+  id            Int     @id @default(autoincrement())
+  name          String
+  tanggal_lahir String
+  hobi          String
+  quotes        String
+  foto          String
+  mediaSosial   MediaSosial[]
+}
+
+model MediaSosial {
+  id       Int     @id @default(autoincrement())
+  app      String
+  username String
+  siswaId  Int
+  siswa    Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+}
