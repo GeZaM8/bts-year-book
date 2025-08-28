@@ -150,7 +150,7 @@ export default function SiswaCreate() {
             {/* Tanggal Lahir */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
-                <Calendar className="w-4 h-4 text-blue-500"/> Tempat, Tanggal Lahir <span className="text-red-500">*</span>
+                <Calendar className="w-4 h-4 text-blue-500"/> Tanggal Lahir <span className="text-red-500">*</span>
               </label>
               <input type="date" value={formData.tanggal_lahir}
                 onChange={(e)=>handleInputChange("tanggal_lahir", e.target.value)}
@@ -226,7 +226,16 @@ export default function SiswaCreate() {
             </div>
 
             {/* Submit */}
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 flex items-center justify-center gap-2">
+            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 flex items-center justify-center gap-2"
+              onClick={()=>{
+                if(formData.name && formData.tanggal_lahir){
+                  if(preview===null){
+                    setNotif({type: "error", message: "Harap pilih foto terlebih dahulu!"})
+                  }
+                  setTimeout(() => setNotif({ message: "", type: null }), 3000);
+                }
+              }}
+            >
               <ArrowUpCircle className="w-4 h-4"/> Simpan Data
             </button>
           </form>

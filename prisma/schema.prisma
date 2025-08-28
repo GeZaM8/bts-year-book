@@ -11,8 +11,8 @@ model Siswa {
   id            Int     @id @default(autoincrement())
   name          String
   tanggal_lahir String
-  hobi          String
-  quotes        String
+  hobi          String?
+  quotes        String?
   foto          String
   mediaSosial   MediaSosial[]
 }
