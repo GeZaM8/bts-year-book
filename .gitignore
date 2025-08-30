@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-!node_modules/@prisma/client
+# !node_modules/@prisma/client
 /.pnp
 .pnp.*
 .yarn/*
@@ -15,6 +15,7 @@
 /coverage
 
 # next.js
+.next
 
 # production
 /build

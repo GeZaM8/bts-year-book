@@ -1,8 +1,0 @@
-{
-  "/api/siswa/route": "app/api/siswa/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/admin/siswa/view/page": "app/admin/siswa/view/page.js",
-  "/admin/siswa/create/page": "app/admin/siswa/create/page.js",
-  "/page": "app/page.js"
-}
