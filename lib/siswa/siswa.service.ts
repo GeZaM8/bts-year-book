@@ -21,7 +21,7 @@ export async function createSiswa(formData: FormData) {
       tanggal_lahir,
       hobi,
       quotes,
-      foto: `/uploads/${filePath}`,
+      foto: `${filePath}`,
       mediaSosial: { create: media_sosial },
     },
     include: { mediaSosial: true },

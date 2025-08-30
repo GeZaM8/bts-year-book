@@ -14,13 +14,24 @@ export async function POST(req: Request) {
 
     const result = await createSiswa(formData);
     return NextResponse.json({ message: 'Data berhasil disimpan', data: result, type: 'success' }, { status: 201 });
-  } catch (error: any) {
-    console.error(error);
-    return NextResponse.json({ error: error.message || 'Gagal simpan data' }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'Gagal simpan data' }, { status: 500 });
   }
 }
 
 export async function GET() {
-  const siswa = await getAllSiswa();
-  return NextResponse.json(siswa);
+  try {
+    const siswa = await getAllSiswa();
+    return NextResponse.json(siswa);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'Gagal mendapatkan data' }, { status: 500 });
+  }
 }

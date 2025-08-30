@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getAllSiswa } from '@/../lib/siswa/siswa.service';
 
 export default async function ViewSiswa() {
@@ -52,9 +53,11 @@ export default async function ViewSiswa() {
                   <td className="px-4 py-2 text-black">{s.hobi}</td>
                   <td className="px-4 py-2 italic text-gray-700">{s.quotes}</td>
                   <td className="px-4 py-2">
-                    <img
-                      src={'/' + s.foto}
+                    <Image
+                      src={`/uploads/${s.foto}`}
                       alt={s.name}
+                      width={80}
+                      height={80}
                       className="w-20 h-20 object-cover rounded-full border-2 border-blue-300 shadow"
                     />
                   </td>

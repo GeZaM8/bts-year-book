@@ -6,6 +6,7 @@ import {
   User, Calendar, MessageCircle, Heart, Book, Camera,
   Plus, Trash2, ArrowUpCircle, AlertCircle, Link,
 } from '@deemlol/next-icons';
+import Image from "next/image";
 
 export default function SiswaCreate() {
   const [notif, setNotif] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
@@ -130,7 +131,13 @@ export default function SiswaCreate() {
               <input type="file" id="foto" className="hidden" accept="image/*" onChange={handleFileChange} required/>
               <label htmlFor="foto" className="w-28 h-28 border border-gray-300 rounded-full flex items-center justify-center overflow-hidden cursor-pointer hover:border-blue-400">
                 {preview ? (
-                  <img src={preview} alt="preview" className="w-full h-full object-cover"/>
+                  <Image 
+                  src={`/uploads/${preview}`}
+                  alt="preview"
+                  width={112}
+                  height={112}
+                  className="w-full h-full object-cover"
+                  />
                 ) : (
                   <Camera className="w-8 h-8 text-gray-400"/>
                 )}

@@ -28,15 +28,24 @@ export async function saveFoto(foto: File, name: string, tanggal_lahir: string):
 }
 
 export function parseMediaSosial(formData: FormData) {
-  const media_sosial: { app: string; username: string }[] = [];
+  type MediaSosial = { app: string; username: string };
+  const media_sosial: MediaSosial[] = [];
+
   for (const [key, value] of formData.entries()) {
     const match = key.match(/media_sosial\[(\d+)]\[(\w+)]/);
     if (match) {
       const index = Number(match[1]);
-      const field = match[2];
-      if (!media_sosial[index]) media_sosial[index] = { app: '', username: '' };
-      (media_sosial[index] as any)[field] = value;
+      const field = match[2] as keyof MediaSosial;
+
+      if (!media_sosial[index]) {
+        media_sosial[index] = { app: '', username: '' };
+      }
+
+      if (typeof value === 'string') {
+        media_sosial[index][field] = value;
+      }
     }
   }
+
   return media_sosial;
 }
