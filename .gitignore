@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+!node_modules/@prisma/client
 /.pnp
 .pnp.*
 .yarn/*
@@ -14,8 +15,6 @@
 /coverage
 
 # next.js
-/.next/
-/out/
 
 # production
 /build
@@ -40,4 +39,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/src/generated/prisma
+# prisma
