@@ -1,8 +1,8 @@
 {
   "/api/siswa/route": "/api/siswa",
-  "/favicon.ico/route": "/favicon.ico",
   "/_not-found/page": "/_not-found",
-  "/admin/siswa/create/page": "/admin/siswa/create",
+  "/favicon.ico/route": "/favicon.ico",
   "/admin/siswa/view/page": "/admin/siswa/view",
+  "/admin/siswa/create/page": "/admin/siswa/create",
   "/page": "/"
 }
