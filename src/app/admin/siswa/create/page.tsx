@@ -132,7 +132,7 @@ export default function SiswaCreate() {
               <label htmlFor="foto" className="w-28 h-28 border border-gray-300 rounded-full flex items-center justify-center overflow-hidden cursor-pointer hover:border-blue-400">
                 {preview ? (
                   <Image 
-                  src={`/uploads/${preview}`}
+                  src={preview ?? `/uploads/${preview}`}
                   alt="preview"
                   width={112}
                   height={112}
