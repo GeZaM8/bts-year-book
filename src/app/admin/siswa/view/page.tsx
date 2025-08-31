@@ -54,7 +54,7 @@ export default async function ViewSiswa() {
                   <td className="px-4 py-2 italic text-gray-700">{s.quotes}</td>
                   <td className="px-4 py-2">
                     <Image
-                      src={s.foto ?? `/uploads/${s.foto}`}
+                      src={s.foto}
                       alt={s.name}
                       width={80}
                       height={80}

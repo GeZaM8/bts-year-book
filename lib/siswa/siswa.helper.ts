@@ -21,10 +21,6 @@ export async function saveFoto(foto: File, name: string, tanggal_lahir: string):
   const uniqueId = randomUUID().slice(0, 8);
   const fileName = `${safeName}_${safeTgl}_${uniqueId}.${ext}`;
 
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-  await mkdir(uploadDir, { recursive: true });
-  await writeFile(path.join(uploadDir, fileName), buffer);
-
   const { error } = await supabase.storage
     .from('yearbook-photos')
     .upload(fileName, buffer, {
@@ -38,7 +34,6 @@ export async function saveFoto(foto: File, name: string, tanggal_lahir: string):
   }
 
   const { data } = supabase.storage.from('yearbook-photos').getPublicUrl(fileName);
-
   return data.publicUrl;
 }
 
