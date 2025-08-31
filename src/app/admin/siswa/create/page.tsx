@@ -5,6 +5,7 @@ import { SiswaType, MediaSosialType } from "@/types";
 import { 
   User, Calendar, MessageCircle, Heart, Book, Camera,
   Plus, Trash2, ArrowUpCircle, AlertCircle, Link,
+  CheckCircle, XCircle, Loader
 } from '@deemlol/next-icons';
 import Image from "next/image";
 
@@ -12,6 +13,8 @@ export default function SiswaCreate() {
   const [notif, setNotif] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
   const [preview, setPreview] = useState<string | null>(null);
   const [fileFoto, setFileFoto] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   
   const [formData, setFormData] = useState<Omit<SiswaType, "foto">>({
     id: "",
@@ -26,6 +29,7 @@ export default function SiswaCreate() {
     setFormData({ id: "", name: "", tanggal_lahir: "", media_sosial: [], hobi: "", quotes: "" });
     setFileFoto(null);
     setPreview(null);
+    setSubmitStatus('idle');
   }, []);
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,12 +74,22 @@ export default function SiswaCreate() {
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!fileFoto) {
+      setNotif({ type: "error", message: "Harap pilih foto terlebih dahulu!" });
+      setTimeout(() => setNotif({ message: "", type: null }), 3000);
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    
     const data = new FormData();
     data.append("name", formData.name);
     data.append("tanggal_lahir", formData.tanggal_lahir);
     data.append("hobi", formData.hobi);
     data.append("quotes", formData.quotes);
-    if (fileFoto) data.append("foto", fileFoto);
+    data.append("foto", fileFoto);
 
     formData.media_sosial.forEach((m, i) => {
       data.append(`media_sosial[${i}][app]`, m.app);
@@ -85,12 +99,19 @@ export default function SiswaCreate() {
     try {
       const res = await fetch("/api/siswa", { method: "POST", body: data });
       if (!res.ok) throw new Error("Gagal simpan data");
+      
+      setSubmitStatus('success');
       setNotif({ message: "Data berhasil disimpan!", type: "success" });
       resetForm();
     } catch {
+      setSubmitStatus('error');
       setNotif({ message: "Terjadi kesalahan saat menyimpan data", type: "error" });
     } finally {
-      setTimeout(() => setNotif({ message: "", type: null }), 3000);
+      setIsSubmitting(false);
+      setTimeout(() => {
+        setNotif({ message: "", type: null });
+        setSubmitStatus('idle');
+      }, 3000);
     }
   }, [formData, fileFoto, resetForm]);
 
@@ -116,15 +137,15 @@ export default function SiswaCreate() {
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {notif.type && (
-            <div
-            className={`fixed top-8 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-md text-white transition-all duration-500 ${
-              notif.type === "success" ? "bg-green-500" : "bg-red-500"
-            } ${notif.type ? "opacity-100" : "opacity-0"}`}
-            >
-            {notif.message}
-            </div>
-          )}
+            {notif.type && (
+              <div
+                className={`fixed top-8 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-md text-white transition-all duration-500 ${
+                  notif.type === "success" ? "bg-green-500" : "bg-red-500"
+                } ${notif.type ? "opacity-100" : "opacity-0"}`}
+              >
+                {notif.message}
+              </div>
+            )}
 
             {/* Upload Foto */}
             <div className="flex flex-col items-center">
@@ -132,11 +153,11 @@ export default function SiswaCreate() {
               <label htmlFor="foto" className="w-28 h-28 border border-gray-300 rounded-full flex items-center justify-center overflow-hidden cursor-pointer hover:border-blue-400">
                 {preview ? (
                   <Image 
-                  src={preview}
-                  alt="preview"
-                  width={112}
-                  height={112}
-                  className="w-full h-full object-cover"
+                    src={preview}
+                    alt="preview"
+                    width={112}
+                    height={112}
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <Camera className="w-8 h-8 text-gray-400"/>
@@ -232,18 +253,41 @@ export default function SiswaCreate() {
               <AlertCircle className="w-4 h-4"/> Hayo, jangan asal nulis ya! Data yang udah tersimpan susah diubah, jadi pastikan kamu tetiti dan isi data yang benar!
             </div>
 
-            {/* Submit */}
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 flex items-center justify-center gap-2"
-              onClick={()=>{
-                if(formData.name && formData.tanggal_lahir){
-                  if(preview===null){
-                    setNotif({type: "error", message: "Harap pilih foto terlebih dahulu!"})
-                  }
-                  setTimeout(() => setNotif({ message: "", type: null }), 3000);
-                }
-              }}
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className={`w-full py-2 rounded-md flex items-center justify-center gap-2 transition-all duration-300 ${
+                isSubmitting 
+                  ? 'bg-blue-400 cursor-not-allowed' 
+                  : submitStatus === 'success' 
+                    ? 'bg-green-600 hover:bg-green-700' 
+                    : submitStatus === 'error' 
+                      ? 'bg-red-600 hover:bg-red-700' 
+                      : 'bg-blue-600 hover:bg-blue-700'
+              } text-white`}
             >
-              <ArrowUpCircle className="w-4 h-4"/> Simpan Data
+              {isSubmitting ? (
+                <>
+                  <Loader className="w-4 h-4 animate-spin" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : submitStatus === 'success' ? (
+                <>
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Berhasil Disimpan!</span>
+                </>
+              ) : submitStatus === 'error' ? (
+                <>
+                  <XCircle className="w-4 h-4" />
+                  <span>Gagal Disimpan</span>
+                </>
+              ) : (
+                <>
+                  <ArrowUpCircle className="w-4 h-4" />
+                  <span>Simpan Data</span>
+                </>
+              )}
             </button>
           </form>
         </div>
