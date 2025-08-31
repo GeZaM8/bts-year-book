@@ -13,7 +13,7 @@ export async function createSiswa(formData: FormData) {
   }
 
   const media_sosial = parseMediaSosial(formData);
-  const filePath = foto ? await saveFoto(foto, name, tanggal_lahir) : null;
+  const fileURL = foto ? await saveFoto(foto, name, tanggal_lahir) : null;
 
   return prisma.siswa.create({
     data: {
@@ -21,7 +21,7 @@ export async function createSiswa(formData: FormData) {
       tanggal_lahir,
       hobi,
       quotes,
-      foto: `${filePath}`,
+      foto: `${fileURL}`,
       mediaSosial: { create: media_sosial },
     },
     include: { mediaSosial: true },

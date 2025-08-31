@@ -12,6 +12,7 @@
     "@chakra-ui/react": "^3.24.2",
     "@deemlol/next-icons": "^0.1.9",
     "@prisma/client": "^6.15.0",
+    "@supabase/supabase-js": "^2.56.1",
     "dotenv": "^17.2.1",
     "lucide-react": "^0.539.0",
     "next": "^15.5.2",

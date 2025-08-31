@@ -1,6 +1,7 @@
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { randomUUID } from 'crypto';
+import { supabase } from '@/../lib/supabase';
 
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
@@ -24,7 +25,21 @@ export async function saveFoto(foto: File, name: string, tanggal_lahir: string):
   await mkdir(uploadDir, { recursive: true });
   await writeFile(path.join(uploadDir, fileName), buffer);
 
-  return fileName;
+  const { error } = await supabase.storage
+    .from('yearbook-photos')
+    .upload(fileName, buffer, {
+      contentType: foto.type,
+      upsert: true,
+    });
+
+  if (error) {
+    console.error(error);
+    throw new Error('Gagal upload ke Supabase');
+  }
+
+  const { data } = supabase.storage.from('yearbook-photos').getPublicUrl(fileName);
+
+  return data.publicUrl;
 }
 
 export function parseMediaSosial(formData: FormData) {
