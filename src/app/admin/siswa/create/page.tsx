@@ -98,10 +98,22 @@ export default function SiswaCreate() {
 
     try {
       const res = await fetch("/api/siswa", { method: "POST", body: data });
-      const result = await res.json();
+
+      let result: any;
+      try {
+        result = await res.json();
+      } catch {
+        const text = await res.text();
+  
+        if (res.status === 413 || text.includes("Request Entity Too Large")) {
+          throw new Error("Ukuran file terlalu besar. Maksimal 4.5MB (batas Vercel)");
+        }
+  
+        throw new Error(text || "Server tidak merespons dengan JSON");
+      }
 
       if (!res.ok) {
-        throw new Error(result.message || result.error || "Gagal simpan data");
+        throw new Error(result?.message || result?.error || "Gagal simpan data");
       }
       
       setSubmitStatus('success');
