@@ -106,7 +106,7 @@ export default function SiswaCreate() {
         const text = await res.text();
   
         if (res.status === 413 || text.includes("Request Entity Too Large")) {
-          throw new Error("Ukuran file terlalu besar. Maksimal 4.5MB (batas Vercel)");
+          throw new Error("Ukuran file terlalu besar. Maksimal 3MB");
         }
   
         throw new Error(text || "Server tidak merespons dengan JSON");
