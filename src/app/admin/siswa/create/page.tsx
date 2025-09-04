@@ -98,14 +98,18 @@ export default function SiswaCreate() {
 
     try {
       const res = await fetch("/api/siswa", { method: "POST", body: data });
-      if (!res.ok) throw new Error("Gagal simpan data");
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || result.error || "Gagal simpan data");
+      }
       
       setSubmitStatus('success');
       setNotif({ message: "Data berhasil disimpan!", type: "success" });
       resetForm();
-    } catch {
+    } catch (err) {
       setSubmitStatus('error');
-      setNotif({ message: "Terjadi kesalahan saat menyimpan data", type: "error" });
+      setNotif({ message: err instanceof Error ? err.message : "Terjadi kesalahan", type: "error" });
     } finally {
       setIsSubmitting(false);
       setTimeout(() => {
