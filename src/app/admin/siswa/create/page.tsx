@@ -101,14 +101,12 @@ export default function SiswaCreate() {
 
       let result: any;
       try {
-        result = await res.json();
+        result = await res.clone().json();
       } catch {
         const text = await res.text();
-  
         if (res.status === 413 || text.includes("Request Entity Too Large")) {
           throw new Error("Ukuran file terlalu besar. Maksimal 3MB");
         }
-  
         throw new Error(text || "Server tidak merespons dengan JSON");
       }
 
